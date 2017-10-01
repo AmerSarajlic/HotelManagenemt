@@ -11,11 +11,18 @@ public class Rooms {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+	
 	private String type;
 	private boolean isAvilable;
 	
 	public Rooms() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Rooms(String type, boolean isAvilable) {
+		super();
+		this.type = type;
+		this.isAvilable = isAvilable;
 	}
 
 	public int getId() {

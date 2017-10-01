@@ -17,6 +17,12 @@ public class Services {
 	public Services() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Services(String serviceName, int servicePrice) {
+		super();
+		this.serviceName = serviceName;
+		this.servicePrice = servicePrice;
+	}
 
 	public String getServiceName() {
 		return serviceName;

@@ -1,5 +1,6 @@
 package hotelmanagement.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -9,7 +10,7 @@ import org.hibernate.query.Query;
 import hotelmanagement.data.Customers;
 import hotelmanagement.utils.HibernateUtils;
 
-public class CustomersDAOImplementation implements CustomersDAO{
+public class CustomersDAOImplementation implements CustomersDAO {
 
 	private Session currentSession;
 	private Transaction currentTransaction;
@@ -18,7 +19,8 @@ public class CustomersDAOImplementation implements CustomersDAO{
 	}
 
 	public Session openCurrentSession() {
-		return currentSession = HibernateUtils.getSessionFactory().openSession();
+		currentSession = HibernateUtils.getSessionFactory().openSession();
+		return currentSession;
 	}
 
 	public Session openCurrentSessionWithTransaction() {
@@ -30,16 +32,16 @@ public class CustomersDAOImplementation implements CustomersDAO{
 	public void closeCurrentSession() {
 		currentSession.close();
 	}
-	
+
 	public void closeCurrentSessionWithTransaction() {
 		currentTransaction.commit();
 		currentSession.close();
 	}
-	
+
 	public Session getCurrentSession() {
 		return currentSession;
 	}
-	
+
 	public void setCurrentSession(Session currentSession) {
 		this.currentSession = currentSession;
 	}
@@ -53,44 +55,126 @@ public class CustomersDAOImplementation implements CustomersDAO{
 	}
 
 	@Override
-	public void addCustomer(Customers customer) {
-		getCurrentSession().save(customer);
-	}
+	public boolean addCustomer(Customers customer) {
 
-	@Override
-	public void removeCustomer(String idCard) {
-		
-		
-	}
+		try {
 
-	@Override
-	public double bill(String idCard) {
-		// TODO Auto-generated method stub
-		return 0;
+			openCurrentSessionWithTransaction().save(customer);
+			closeCurrentSessionWithTransaction();
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override
 	public List<Customers> displayAllCustomers() {
 
-		String hql = "FROM Customers";
-		Query query = currentSession.createQuery(hql);
-		List<Customers> customers = query.getResultList();
-		return customers;
+		List<Customers> customersList = new ArrayList<>();
+		
+		try {
+
+			openCurrentSessionWithTransaction();
+			
+			String hql = "FROM Customers";
+			
+			@SuppressWarnings("unchecked")
+			Query<Customers> query = currentSession.createQuery(hql);
+			
+			customersList = query.getResultList();
+
+			return customersList;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Customers findCustomerByName(String firstName, String lastName) {
+	
+		Customers customer = null;
+
+		try {
+			openCurrentSessionWithTransaction();
+
+			String hql = "FROM Customers WHERE firstName= :firstName AND lastName= :lastName";
+
+			@SuppressWarnings("unchecked")
+			Query<Customers> query = currentSession.createQuery(hql);
+
+			query.setParameter("firstName", firstName);
+			query.setParameter("lastName", lastName);
+
+			customer = query.getSingleResult();
+
+			closeCurrentSessionWithTransaction();
+			
+			return customer;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Customers findCustomerByIdCard(String idCard) {
+
+		Customers customer = null;
+
+		try {
+			openCurrentSessionWithTransaction();
+
+			String hql = "FROM Customers WHERE idCard= :idCard";
+
+			@SuppressWarnings("unchecked")
+			Query<Customers> query = currentSession.createQuery(hql);
+
+			query.setParameter("idCard", idCard);
+
+			customer = query.getSingleResult();
+
+			closeCurrentSessionWithTransaction();
+			
+			return customer;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	@Override
+	public boolean deleteCustomer(String idCard) {
+
+		Customers customer = null;
+
+		try {
+			openCurrentSessionWithTransaction();
+
+			String hql = "FROM Customers WHERE idCard= :idCard";
+
+			@SuppressWarnings("unchecked")
+			Query<Customers> query = currentSession.createQuery(hql);
+
+			query.setParameter("idCard", idCard);
+
+			customer = query.getSingleResult();
+			
+			currentSession.delete(customer);
+
+			closeCurrentSessionWithTransaction();
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

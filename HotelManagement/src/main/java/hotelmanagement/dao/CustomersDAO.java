@@ -6,12 +6,14 @@ import hotelmanagement.data.Customers;
 
 public interface CustomersDAO {
 
-	public void addCustomer(Customers customer);
+	public boolean addCustomer(Customers customer);
 
-	public void removeCustomer(String idCard);
+	public Customers findCustomerByName(String firstName, String lastName);
 
-	public double bill(String idCard);
-
+	public Customers findCustomerByIdCard(String idCard);
+	
 	public List<Customers> displayAllCustomers();
+	
+	public boolean deleteCustomer(String idCard);
 	
 }
