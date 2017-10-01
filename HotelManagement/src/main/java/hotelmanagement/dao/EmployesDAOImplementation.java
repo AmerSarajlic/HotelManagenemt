@@ -7,20 +7,19 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import hotelmanagement.data.Services;
+import hotelmanagement.data.Employes;
 import hotelmanagement.utils.HibernateUtils;
 
-public class ServicesDAOImplementation implements ServicesDAO {
+public class EmployesDAOImplementation implements EmployesDAO {
 
 	private Session currentSession;
 	private Transaction currentTransaction;
 
-	public ServicesDAOImplementation() {
+	public EmployesDAOImplementation() {
 	}
 
 	public Session openCurrentSession() {
-		currentSession = HibernateUtils.getSessionFactory().openSession();
-		return currentSession;
+		return currentSession = HibernateUtils.getSessionFactory().openSession();
 	}
 
 	public Session openCurrentSessionWithTransaction() {
@@ -55,10 +54,39 @@ public class ServicesDAOImplementation implements ServicesDAO {
 	}
 
 	@Override
-	public boolean addService(Services service) {
+	public boolean addEmployee(Employes employee) {
 		try {
 
-			openCurrentSessionWithTransaction().save(service);
+			openCurrentSessionWithTransaction().save(employee);
+			closeCurrentSessionWithTransaction();
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean removeEmployee(String firstName, String lastName) {
+		Employes employee = null;
+
+		try {
+			openCurrentSessionWithTransaction();
+
+			String hql = "FROM Employes WHERE firstName= :firstName AND lastName= :lastName";
+
+			@SuppressWarnings("unchecked")
+			Query<Employes> query = currentSession.createQuery(hql);
+
+			query.setParameter("firstName", firstName);
+			query.setParameter("lastName", lastName);
+
+			employee = query.getSingleResult();
+
+			currentSession.delete(employee);
+
 			closeCurrentSessionWithTransaction();
 			return true;
 
@@ -66,89 +94,27 @@ public class ServicesDAOImplementation implements ServicesDAO {
 			e.printStackTrace();
 		}
 		return false;
-
 	}
 
 	@Override
-	public boolean removeService(String serviceName) {
-
-		Services service = null;
-
-		try {
-			openCurrentSessionWithTransaction();
-
-			String hql = "FROM Services WHERE serviceName= :serviceName";
-
-			@SuppressWarnings("unchecked")
-			Query<Services> query = currentSession.createQuery(hql);
-
-			query.setParameter("serviceName", serviceName);
-
-			service = query.getSingleResult();
-
-			currentSession.delete(service);
-
-			closeCurrentSessionWithTransaction();
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-
-	}
-
-	@Override
-	public List<Services> displayAllServices() {
-
-		List<Services> servicesList = new ArrayList<>();
+	public List<Employes> displayAllEmployess() {
+		List<Employes> employesList = new ArrayList<>();
 
 		try {
+
 			openCurrentSessionWithTransaction();
 
-			String hql = "FROM Services";
+			String hql = "FROM Employes";
 
 			@SuppressWarnings("unchecked")
-			Query<Services> query = currentSession.createQuery(hql);
+			Query<Employes> query = currentSession.createQuery(hql);
 
-			servicesList = query.getResultList();
+			employesList = query.getResultList();
 
-			closeCurrentSessionWithTransaction();
-
-			return servicesList;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	@Override
-	public Services getService(String serviceName) {
-		
-		Services service = null;
-
-		try {
-			openCurrentSessionWithTransaction();
-
-			String hql = "FROM Services WHERE serviceName= :serviceName";
-
-			@SuppressWarnings("unchecked")
-			Query<Services> query = currentSession.createQuery(hql);
-
-			query.setParameter("serviceName", serviceName);
-
-			service = query.getSingleResult();
-
-			closeCurrentSessionWithTransaction();
-
-			return service;
-
+			return employesList;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-
 }

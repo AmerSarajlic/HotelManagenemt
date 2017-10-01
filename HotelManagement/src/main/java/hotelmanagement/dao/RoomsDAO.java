@@ -1,13 +1,21 @@
 package hotelmanagement.dao;
 
+import java.util.List;
+
 import hotelmanagement.data.Rooms;
 
 public interface RoomsDAO {
 
-	public void addRoom(Rooms room);
+	public boolean addRoom(Rooms room);
 	
-	public void removeRoom(Rooms room);
+	public boolean removeRoom(String roomNumber);
 	
-	public boolean updateStatus();
+	public Rooms getRoom(String roomNumber);
+	
+	public boolean updateStatus(String roomNumber, boolean status);
+	
+	public List<Rooms> listAllRooms();
+	
+	public List<Rooms> listAllRoomsWithStatus(boolean status);
 	
 }

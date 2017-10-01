@@ -12,25 +12,29 @@ public class Rooms {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
+	private String roomNumber;
 	private String type;
-	private boolean isAvilable;
+	private boolean avilable;
+	private int price;
 	
 	public Rooms() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Rooms(String type, boolean isAvilable) {
+	public Rooms(String roomNumber, String type, boolean avilable, int price) {
 		super();
+		this.roomNumber = roomNumber;
 		this.type = type;
-		this.isAvilable = isAvilable;
+		this.avilable = avilable;
+		this.price = price;
 	}
 
-	public int getId() {
-		return id;
+	public String getRoomNumber() {
+		return roomNumber;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setRoomNumber(String roomNumber) {
+		this.roomNumber = roomNumber;
 	}
 
 	public String getType() {
@@ -42,16 +46,24 @@ public class Rooms {
 	}
 
 	public boolean isAvilable() {
-		return isAvilable;
+		return avilable;
 	}
 
 	public void setAvilable(boolean isAvilable) {
-		this.isAvilable = isAvilable;
+		this.avilable = isAvilable;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 	@Override
 	public String toString() {
-		return "Rooms [id=" + id + ", type=" + type + ", isAvilable=" + isAvilable + "]";
+		return "Rooms [id=" + id + ", roomNumber=" + roomNumber + ", type=" + type + ", avilable=" + avilable
+				+ ", price=" + price + "]";
 	}
-
 }

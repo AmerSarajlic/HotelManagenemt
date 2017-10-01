@@ -10,5 +10,7 @@ public interface ServicesDAO {
 	
 	public boolean removeService(String serviceName);
 	
+	public Services getService(String serviceName);
+	
 	public List<Services> displayAllServices();
 }
